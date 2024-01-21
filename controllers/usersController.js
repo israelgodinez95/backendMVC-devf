@@ -18,9 +18,6 @@ const createUser = async(req = request, res=response) => {
             error
         })
     }
-
-
-    
 }
 
 const readUser = async(req,res) => {
@@ -33,7 +30,7 @@ const readUser = async(req,res) => {
             recordLength,
             user
         })
-    } catch (error) {
+        } catch (error) {
         res.status(500).json({
         msg:"Algo ocurrio al leer usuarios",
         error
@@ -41,18 +38,43 @@ const readUser = async(req,res) => {
     }
 }
 
-const updateUser = (req = request , res) => {
-    const {params, query} = req
-    res.json({
-        msg:"Modificar usuarios desde Controller"
-    })
-}
+const updateUser = async(req = request , res) => {
+    try {
+        const {params, body} = req;
+        const { userId } = params;
 
-const deleteUser = (req,res) => {
-    res.json({
-        msg:"Borrar usuarios desde Controller"
+        await User.findByIdAndUpdate(userId, body)
+        const userToShow = await User.findById(userId)
+        
+        res.status(202).json({
+            msg:"Los usuarios se modificaron correctamente",
+            userToShow
+        })
+    } catch (error) {
+        res.status(500).json({
+        msg:"Algo ocurrio al modificar el registro",
+        error
     })
-}
+}}
+
+const deleteUser = async(req = request,res = response) => {
+    try {
+        const { userId } = req.params
+        const deleteState = {"isActive": false}
+        await User.findByIdAndUpdate(userId, deleteState);
+        const userToShow = await User.findById(userId)
+
+        res.status(202).json({
+            msg:"Se borro el registro",
+            userToShow
+        })
+    } catch (error) {
+        res.status(500).json({
+            msg:"Algo ocurrio al eliminar el registro",
+            error
+    })
+}}
+
 module.exports = {
     createUser,
     readUser,
