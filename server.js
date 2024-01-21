@@ -6,10 +6,13 @@ class Server {
         this.app = express();
         this.port = process.env.PORT || 3001;
         this.database = new Database();
+        this.usersPath = '/api/usuarios';
         //Middelewares
         this.middlewares();
         //Database connection
         this.dbConnection();
+        //Rutas
+        this.routes();
     }
 
     async dbConnection(){
@@ -24,6 +27,10 @@ class Server {
         this.app.use(express.urlencoded({extended: false}));
         //public 
         this.app.use(express.static('public'))   
+    }
+
+    routes(){
+        this.app.use(this.usersPath, require('./routes/users.routes'))
     }
 
     listen(){
