@@ -23,10 +23,22 @@ const createUser = async(req = request, res=response) => {
     
 }
 
-const readUser = (req,res) => {
-    res.json({
-        msg:"Leer usuaruis desde Controller"
-    })
+const readUser = async(req,res) => {
+    try {
+        const { limit = 10 } = req.query
+        const queryParam = { isActive:true }
+        const recordLength = await User.countDocuments();
+        const user = await User.find(queryParam).limit(Number(limit));
+        res.json({
+            recordLength,
+            user
+        })
+    } catch (error) {
+        res.status(500).json({
+        msg:"Algo ocurrio al leer usuarios",
+        error
+         })
+    }
 }
 
 const updateUser = (req = request , res) => {
