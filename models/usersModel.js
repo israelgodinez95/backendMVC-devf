@@ -24,4 +24,8 @@ const UserSchema = Schema({
     }
 })
 
+UserSchema.method('meow', function (){
+    console.log('Meeeeeeooooooow');
+})
+
 module.exports = model('User', UserSchema)
